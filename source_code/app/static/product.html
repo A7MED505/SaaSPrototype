@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FirstSaaS — Product Details</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <a class="brand" href="index.html">FirstSaaS</a>
+    <div class="nav-links">
+      <a href="products.html">Products</a>
+      <a href="cart.html">🛒 <span id="cart-count">0</span></a>
+      <span id="nav-user"></span>
+      <button id="nav-login-btn" class="btn-sm" onclick="openModal('login-modal')">Login</button>
+      <button id="nav-logout-btn" class="btn-sm hidden" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <div class="product-detail-container">
+    <div id="product-detail">
+      <p class="placeholder-text">Loading product...</p>
+    </div>
+
+    <div class="related-section">
+      <h3>Related Products</h3>
+      <div id="related-products" class="product-grid"></div>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div id="login-modal" class="modal hidden">
+    <div class="modal-box">
+      <h3>Login</h3>
+      <input id="login-email" type="email" placeholder="Email" />
+      <input id="login-password" type="password" placeholder="Password" />
+      <div id="login-error" class="error-msg hidden"></div>
+      <button class="btn-primary" onclick="submitLogin()">Login</button>
+      <p>No account? <a href="#" onclick="openModal('register-modal'); closeModal('login-modal')">Register</a></p>
+      <button class="modal-close" onclick="closeModal('login-modal')">✕</button>
+    </div>
+  </div>
+
+  <!-- Register Modal -->
+  <div id="register-modal" class="modal hidden">
+    <div class="modal-box">
+      <h3>Register</h3>
+      <input id="reg-name" type="text" placeholder="Full Name" />
+      <input id="reg-email" type="email" placeholder="Email" />
+      <input id="reg-password" type="password" placeholder="Password (min 6 chars)" />
+      <div id="reg-error" class="error-msg hidden"></div>
+      <button class="btn-primary" onclick="submitRegister()">Register</button>
+      <p>Have an account? <a href="#" onclick="openModal('login-modal'); closeModal('register-modal')">Login</a></p>
+      <button class="modal-close" onclick="closeModal('register-modal')">✕</button>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2026 FirstSaaS. All rights reserved.</p>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      updateNavAuth();
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      if (!id) { document.getElementById('product-detail').innerHTML = '<p>Product not found.</p>'; return; }
+
+      const product = await apiFetch(`/api/products/${id}`).catch(() => null);
+      if (!product) { document.getElementById('product-detail').innerHTML = '<p>Product not found.</p>'; return; }
+
+      document.title = `FirstSaaS — ${product.name}`;
+      document.getElementById('product-detail').innerHTML = `
+        <div class="detail-card">
+          <img src="${product.image_url || 'https://via.placeholder.com/400x300'}" alt="${product.name}" class="detail-img" />
+          <div class="detail-info">
+            <span class="badge">${product.category}</span>
+            <h1>${product.name}</h1>
+            <div class="stars">${'★'.repeat(Math.round(product.rating || 0))}${'☆'.repeat(5 - Math.round(product.rating || 0))}</div>
+            <p class="detail-price">$${product.price.toFixed(2)}</p>
+            <p class="detail-desc">${product.description}</p>
+            <p class="stock-info">Stock: ${product.stock > 0 ? product.stock + ' available' : '<span class="out-of-stock">Out of stock</span>'}</p>
+            <div class="qty-row">
+              <label>Qty:</label>
+              <input id="qty" type="number" value="1" min="1" max="${product.stock}" />
+              <button class="btn-primary" onclick="addToCartDetail('${product.id}')">Add to Cart</button>
+            </div>
+            <div id="add-msg" class="success-msg hidden"></div>
+          </div>
+        </div>
+      `;
+
+      // Load related products by same category
+      const related = await apiFetch(`/api/products/?category=${encodeURIComponent(product.category)}&limit=4`).catch(() => []);
+      const filtered = related.filter(p => p.id !== product.id).slice(0, 3);
+      document.getElementById('related-products').innerHTML = filtered.length ? filtered.map(productCard).join('') : '<p class="placeholder-text">No related products.</p>';
+    });
+
+    async function addToCartDetail(productId) {
+      if (!getToken()) { openModal('login-modal'); return; }
+      const qty = parseInt(document.getElementById('qty').value) || 1;
+      try {
+        await apiFetch('/api/cart/add', 'POST', { product_id: productId, quantity: qty });
+        const msg = document.getElementById('add-msg');
+        msg.textContent = 'Added to cart!';
+        msg.classList.remove('hidden');
+        setTimeout(() => msg.classList.add('hidden'), 2000);
+        updateCartCount();
+      } catch (e) {
+        alert(e.message || 'Failed to add to cart');
+      }
+    }
+  </script>
+</body>
+</html>

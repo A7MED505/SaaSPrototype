@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FirstSaaS — Products</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <a class="brand" href="index.html">FirstSaaS</a>
+    <div class="nav-links">
+      <a href="products.html">Products</a>
+      <a href="cart.html">🛒 <span id="cart-count">0</span></a>
+      <span id="nav-user"></span>
+      <button id="nav-login-btn" class="btn-sm" onclick="openModal('login-modal')">Login</button>
+      <button id="nav-logout-btn" class="btn-sm hidden" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <div class="page-container">
+    <aside class="sidebar">
+      <h3>Filters</h3>
+      <label>Category</label>
+      <select id="category-filter" onchange="applyFilters()">
+        <option value="">All Categories</option>
+      </select>
+      <label>Search</label>
+      <input id="search-input" type="text" placeholder="Search products..." oninput="applyFilters()" />
+    </aside>
+
+    <main>
+      <h2 class="page-title">All Products</h2>
+      <div id="products-grid" class="product-grid"></div>
+      <div class="pagination">
+        <button id="prev-btn" class="btn-sm" onclick="changePage(-1)">← Prev</button>
+        <span id="page-info">Page 1</span>
+        <button id="next-btn" class="btn-sm" onclick="changePage(1)">Next →</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- Login Modal -->
+  <div id="login-modal" class="modal hidden">
+    <div class="modal-box">
+      <h3>Login</h3>
+      <input id="login-email" type="email" placeholder="Email" />
+      <input id="login-password" type="password" placeholder="Password" />
+      <div id="login-error" class="error-msg hidden"></div>
+      <button class="btn-primary" onclick="submitLogin()">Login</button>
+      <p>No account? <a href="#" onclick="openModal('register-modal'); closeModal('login-modal')">Register</a></p>
+      <button class="modal-close" onclick="closeModal('login-modal')">✕</button>
+    </div>
+  </div>
+
+  <!-- Register Modal -->
+  <div id="register-modal" class="modal hidden">
+    <div class="modal-box">
+      <h3>Register</h3>
+      <input id="reg-name" type="text" placeholder="Full Name" />
+      <input id="reg-email" type="email" placeholder="Email" />
+      <input id="reg-password" type="password" placeholder="Password (min 6 chars)" />
+      <div id="reg-error" class="error-msg hidden"></div>
+      <button class="btn-primary" onclick="submitRegister()">Register</button>
+      <p>Have an account? <a href="#" onclick="openModal('login-modal'); closeModal('register-modal')">Login</a></p>
+      <button class="modal-close" onclick="closeModal('register-modal')">✕</button>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2026 FirstSaaS. All rights reserved.</p>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    let currentPage = 0;
+    const PAGE_SIZE = 12;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      updateNavAuth();
+      await loadCategoryOptions();
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('category')) {
+        document.getElementById('category-filter').value = params.get('category');
+      }
+      await loadProducts();
+    });
+
+    async function loadCategoryOptions() {
+      const cats = await apiFetch('/api/products/categories').catch(() => []);
+      const sel = document.getElementById('category-filter');
+      cats.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c; opt.textContent = c;
+        sel.appendChild(opt);
+      });
+    }
+
+    async function loadProducts() {
+      const category = document.getElementById('category-filter').value;
+      const search = document.getElementById('search-input').value;
+      let url = `/api/products/?skip=${currentPage * PAGE_SIZE}&limit=${PAGE_SIZE}`;
+      if (category) url += `&category=${encodeURIComponent(category)}`;
+      if (search) url += `&search=${encodeURIComponent(search)}`;
+      const products = await apiFetch(url).catch(() => []);
+      const grid = document.getElementById('products-grid');
+      grid.innerHTML = products.length ? products.map(productCard).join('') : '<p class="placeholder-text">No products found.</p>';
+      document.getElementById('page-info').textContent = `Page ${currentPage + 1}`;
+      document.getElementById('prev-btn').disabled = currentPage === 0;
+      document.getElementById('next-btn').disabled = products.length < PAGE_SIZE;
+    }
+
+    function applyFilters() { currentPage = 0; loadProducts(); }
+    function changePage(dir) { currentPage = Math.max(0, currentPage + dir); loadProducts(); }
+  </script>
+</body>
+</html>
