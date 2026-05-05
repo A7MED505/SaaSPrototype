@@ -28,7 +28,7 @@ router.post('/login', async (req, res) => {
 router.get('/me', async (req, res) => {
   try {
     const user = await getCurrentUser(req);
-    res.json({ id: user._id, name: user.name, email: user.email, created_at: user.createdAt });
+    res.json({ id: user._id, name: user.name, email: user.email, isAdmin: user.isAdmin, created_at: user.createdAt });
   } catch (e) {
     res.status(e.status || 500).json({ detail: e.message });
   }

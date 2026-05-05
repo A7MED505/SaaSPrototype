@@ -11,15 +11,20 @@ export default function Navbar() {
   return (
     <>
       <nav className="navbar">
-        <Link className="brand" to="/">FirstSaaS</Link>
+        <Link className="brand" to="/">✦ FirstSaaS</Link>
         <div className="nav-links">
           <Link to="/products">Products</Link>
-          <Link to="/cart">🛒 {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}</Link>
+          {user?.isAdmin && <Link to="/admin">Admin</Link>}
+          <Link to="/cart" className="cart-btn">
+            🛒 Cart
+            {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+          </Link>
           {user ? (
-            <>
-              <span>Hi, {user.name}</span>
+            <div className="nav-user">
+              <span className="nav-username">Hi, {user.name}</span>
+              {user.isAdmin && <span className="admin-badge">Admin</span>}
               <button className="btn-sm" onClick={() => { logout(); navigate('/'); }}>Logout</button>
-            </>
+            </div>
           ) : (
             <button className="btn-sm" onClick={() => setShowModal(true)}>Login</button>
           )}

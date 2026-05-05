@@ -53,3 +53,13 @@ export const checkout = () => apiFetch('/api/cart/checkout', 'POST');
 // Recommendations
 export const getRecommendations = (limit = 6) =>
   apiFetch(`/api/recommendations/?limit=${limit}`);
+
+// Admin
+export const getAdminStats    = () => apiFetch('/api/admin/stats');
+export const getAdminUsers    = () => apiFetch('/api/admin/users');
+export const toggleAdminRole  = (id) => apiFetch(`/api/admin/users/${id}/toggle-admin`, 'PATCH');
+export const getAdminProducts = () => apiFetch('/api/admin/products');
+export const createAdminProduct = (data) => apiFetch('/api/admin/products', 'POST', data);
+export const updateAdminProduct = (id, data) => apiFetch(`/api/admin/products/${id}`, 'PUT', data);
+export const deleteAdminProduct = (id) => apiFetch(`/api/admin/products/${id}`, 'DELETE');
+

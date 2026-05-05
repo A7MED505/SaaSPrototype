@@ -8,6 +8,7 @@ const authRouter = require('./routers/auth');
 const productsRouter = require('./routers/products');
 const cartRouter = require('./routers/cart');
 const recommendationsRouter = require('./routers/recommendations');
+const adminRouter = require('./routers/admin');
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -20,6 +21,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/products', productsRouter);
 app.use('/api/cart', cartRouter);
 app.use('/api/recommendations', recommendationsRouter);
+app.use('/api/admin', adminRouter);
 
 // Serve static frontend files
 app.use(express.static(path.join(__dirname, 'static')));
