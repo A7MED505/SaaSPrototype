@@ -1,0 +1,146 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      mongodb:
+        image: mongo:6.0
+        options: >-
+          --health-cmd mongosh
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 27017:27017
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: Install dependencies (backend)
+      run: |
+        cd source_code
+        npm install
+    
+    - name: Install dependencies (frontend)
+      run: |
+        cd source_code/frontend
+        npm install
+    
+    - name: Run backend tests
+      run: |
+        cd source_code
+        npm test
+      env:
+        MONGODB_URI: mongodb://localhost:27017/firstsaas-test
+        JWT_SECRET: test_secret_key
+    
+    - name: Run frontend tests
+      run: |
+        cd source_code/frontend
+        npm test
+    
+    - name: Generate coverage report
+      run: |
+        cd source_code
+        npm test -- --coverage
+    
+    - name: Upload coverage
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./source_code/coverage/coverage-final.json
+
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: Build frontend
+      run: |
+        cd source_code/frontend
+        npm install
+        npm run build
+    
+    - name: Build Docker images
+      run: |
+        docker build -f deployment/Dockerfile -t saas-backend:latest .
+        docker build -f deployment/Dockerfile.frontend -t saas-frontend:latest .
+
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+    
+    - name: Install backend dependencies
+      run: |
+        cd source_code
+        npm install
+    
+    - name: Lint backend code
+      run: |
+        cd source_code
+        npm run lint
+      continue-on-error: true
+
+  security:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+    
+    - name: Install backend dependencies
+      run: |
+        cd source_code
+        npm install
+    
+    - name: Run npm audit
+      run: |
+        cd source_code
+        npm audit --production
+      continue-on-error: true
+    
+    - name: Install frontend dependencies
+      run: |
+        cd source_code/frontend
+        npm install
+    
+    - name: Frontend npm audit
+      run: |
+        cd source_code/frontend
+        npm audit --production
+      continue-on-error: true

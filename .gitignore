@@ -1,0 +1,46 @@
+// .gitignore - Files to exclude from git
+
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+dist/
+build/
+coverage/
+.next/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Database
+.mongodb/
+*.db
+
+# Temp
+tmp/
+temp/
+*.tmp
+
+# Testing
+.nyc_output/
+junit.xml

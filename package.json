@@ -1,0 +1,40 @@
+{
+  "name": "firstsaas-monorepo",
+  "version": "1.0.0",
+  "description": "FirstSaaS E-commerce Platform - Complete Project",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd source_code && npm run dev",
+    "dev:frontend": "cd source_code/frontend && npm run dev",
+    "install-all": "npm install && cd source_code && npm install && cd frontend && npm install",
+    "test": "concurrently \"cd source_code && npm test\" \"cd source_code/frontend && npm test\"",
+    "test:backend": "cd source_code && npm test",
+    "test:frontend": "cd source_code/frontend && npm test",
+    "build": "concurrently \"cd source_code && npm run build\" \"cd source_code/frontend && npm run build\"",
+    "build:backend": "cd source_code && npm run build",
+    "build:frontend": "cd source_code/frontend && npm run build",
+    "lint": "concurrently \"cd source_code && npm run lint\" \"cd source_code/frontend && npm run lint\"",
+    "format": "concurrently \"cd source_code && npm run format\" \"cd source_code/frontend && npm run format\"",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f"
+  },
+  "keywords": [
+    "saas",
+    "ecommerce",
+    "express",
+    "react",
+    "mongodb"
+  ],
+  "author": "Ahmed",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

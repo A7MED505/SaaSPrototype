@@ -1,0 +1,149 @@
+### FirstSaaS API Sample Requests
+
+### Base URL
+@baseUrl = http://localhost:8000/api
+
+---
+
+## Authentication Requests
+
+### Register User
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "SecurePass123",
+  "name": "John Doe"
+}
+
+---
+
+### Login User
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "SecurePass123"
+}
+
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+---
+
+### Get Current User
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{token}}
+
+---
+
+## Product Requests
+
+### Get All Products
+GET {{baseUrl}}/products
+
+---
+
+### Get All Products with Filters
+GET {{baseUrl}}/products?category=electronics&sort=price&order=asc
+
+---
+
+### Get Product By ID
+GET {{baseUrl}}/products/prod_001
+
+---
+
+### Create Product (Admin)
+POST {{baseUrl}}/products
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "New Laptop",
+  "price": 999.99,
+  "description": "High-performance laptop",
+  "image": "laptop.jpg",
+  "category": "Electronics",
+  "stock": 50
+}
+
+---
+
+## Cart Requests
+
+### Get Cart
+GET {{baseUrl}}/cart
+Authorization: Bearer {{token}}
+
+---
+
+### Add to Cart
+POST {{baseUrl}}/cart
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "productId": "prod_001",
+  "quantity": 2
+}
+
+---
+
+### Remove from Cart
+DELETE {{baseUrl}}/cart/prod_001
+Authorization: Bearer {{token}}
+
+---
+
+## Admin Requests
+
+### Get Statistics
+GET {{baseUrl}}/admin/stats
+Authorization: Bearer {{token}}
+
+---
+
+### Get User List (Admin)
+GET {{baseUrl}}/admin/users
+Authorization: Bearer {{token}}
+
+---
+
+### Get Order List (Admin)
+GET {{baseUrl}}/admin/orders
+Authorization: Bearer {{token}}
+
+---
+
+## Error Handling Examples
+
+### Invalid Email
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "invalid-email",
+  "password": "SecurePass123",
+  "name": "John Doe"
+}
+
+---
+
+### Weak Password
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "weak",
+  "name": "John Doe"
+}
+
+---
+
+### Unauthorized Access
+GET {{baseUrl}}/admin/stats
+
+---

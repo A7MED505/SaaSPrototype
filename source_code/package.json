@@ -1,7 +1,7 @@
 {
-  "name": "firstsaas-prototype",
+  "name": "firstsaas-backend",
   "version": "1.0.0",
-  "description": "FirstSaaS E-commerce Prototype",
+  "description": "FirstSaaS E-commerce Backend",
   "main": "app/server.js",
   "scripts": {
     "start": "node app/server.js",

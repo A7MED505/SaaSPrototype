@@ -1,0 +1,153 @@
+# FirstSaaS Prototype - Project Requirements
+# This file documents all project dependencies and versions
+
+## Backend (Node.js/Express)
+# See source_code/package.json for detailed versions
+
+### Core Dependencies
+- Express.js ^4.19.2 - Web framework
+- MongoDB/Mongoose ^8.4.0 - Database and ODM
+- jsonwebtoken ^9.0.2 - JWT authentication
+- bcrypt ^5.1.1 - Password hashing
+- dotenv ^16.4.5 - Environment configuration
+- cors ^2.8.5 - CORS middleware
+
+### Development Dependencies
+- nodemon ^3.1.3 - Auto-reload during development
+- jest ^29.7.0 - Testing framework
+- supertest ^6.3.3 - HTTP testing
+
+## Frontend (React/Vite)
+# See source_code/frontend/package.json for detailed versions
+
+### Core Dependencies
+- React ^18.3.1 - UI library
+- react-dom ^18.3.1 - DOM rendering
+- react-router-dom ^6.23.1 - Client routing
+- axios - HTTP client (if added)
+
+### Development Dependencies
+- Vite ^5.2.12 - Build tool
+- @vitejs/plugin-react ^4.3.1 - React plugin
+- vitest ^0.34.0 - Unit testing
+- @testing-library/react ^14.0.0 - React testing utilities
+- @testing-library/jest-dom ^6.1.4 - DOM matchers
+- jsdom - DOM implementation for testing
+
+## System Requirements
+
+### Runtime
+- Node.js: >= 18.0.0
+- npm: >= 9.0.0
+- MongoDB: >= 5.0.0 (local or Atlas)
+
+### Development
+- Git >= 2.0
+- Code Editor: VS Code recommended
+- Browser: Chrome/Firefox/Safari (latest)
+
+### Optional
+- Docker - For containerization
+- Docker Compose - For multi-container setup
+- Postman/Thunder Client - API testing
+- MongoDB Compass - Database UI
+
+## Installation Steps
+
+### 1. Clone Repository
+```bash
+git clone https://github.com/A7MED505/SaaSPrototype.git
+cd SaaSPrototype
+```
+
+### 2. Backend Setup
+```bash
+cd source_code
+npm install
+```
+
+### 3. Frontend Setup
+```bash
+cd frontend
+npm install
+```
+
+### 4. Environment Configuration
+```bash
+# In root directory
+cp .env.example .env
+# Edit .env with your configuration
+```
+
+### 5. Database Setup
+- Local MongoDB:
+  ```bash
+  mongod  # Start MongoDB server
+  ```
+- Or use MongoDB Atlas cloud
+
+## Verification
+
+After installation, verify everything works:
+
+```bash
+# Terminal 1 - Backend
+cd source_code
+npm run dev
+# Should show: Server running on http://localhost:8000
+
+# Terminal 2 - Frontend
+cd source_code/frontend
+npm run dev
+# Should show: ➜  Local:   http://localhost:5173/
+
+# Terminal 3 - Tests
+cd source_code
+npm test  # Should pass all backend tests
+
+cd source_code/frontend
+npm test -- --run  # Should pass all frontend tests
+```
+
+## Version Management
+
+### Update Dependencies
+
+Backend:
+```bash
+cd source_code
+npm update
+npm audit fix
+```
+
+Frontend:
+```bash
+cd source_code/frontend
+npm update
+npm audit fix
+```
+
+## Important Notes
+
+⚠️ **Security**:
+- Never commit `.env` with real secrets
+- Always use `.env.example` as template
+- Keep dependencies updated for security patches
+
+📝 **Documentation**:
+- README.md - Project overview
+- run_instructions.md - Setup and running guide
+- deployment/ - Deployment configurations
+
+🧪 **Testing**:
+- Backend: Jest + Supertest
+- Frontend: Vitest + React Testing Library
+- Test results saved in test_results/
+
+## Support & Troubleshooting
+
+See `run_instructions.md` for detailed troubleshooting steps.
+
+---
+
+Last Updated: May 2026

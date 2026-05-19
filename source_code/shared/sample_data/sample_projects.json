@@ -1,0 +1,50 @@
+{
+  "users": [
+    {
+      "_id": "user_001",
+      "email": "user1@example.com",
+      "name": "User One",
+      "password_hash": "hashed_password_here",
+      "createdAt": "2024-01-01T00:00:00Z"
+    },
+    {
+      "_id": "user_002",
+      "email": "user2@example.com",
+      "name": "User Two",
+      "password_hash": "hashed_password_here",
+      "createdAt": "2024-01-02T00:00:00Z"
+    }
+  ],
+  "products": [
+    {
+      "_id": "prod_001",
+      "name": "Laptop Pro",
+      "description": "High-performance laptop for professionals",
+      "price": 1299.99,
+      "category": "Electronics",
+      "image": "laptop_pro.jpg",
+      "stock": 50,
+      "createdAt": "2024-01-01T00:00:00Z"
+    },
+    {
+      "_id": "prod_002",
+      "name": "Wireless Mouse",
+      "description": "Ergonomic wireless mouse",
+      "price": 29.99,
+      "category": "Accessories",
+      "image": "wireless_mouse.jpg",
+      "stock": 200,
+      "createdAt": "2024-01-02T00:00:00Z"
+    },
+    {
+      "_id": "prod_003",
+      "name": "USB-C Cable",
+      "description": "Universal USB-C charging cable",
+      "price": 9.99,
+      "category": "Accessories",
+      "image": "usb_c_cable.jpg",
+      "stock": 500,
+      "createdAt": "2024-01-03T00:00:00Z"
+    }
+  ]
+}

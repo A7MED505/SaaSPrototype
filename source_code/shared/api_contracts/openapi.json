@@ -1,0 +1,62 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "FirstSaaS E-commerce API",
+    "description": "API documentation for FirstSaaS e-commerce platform",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000",
+      "description": "Development server"
+    }
+  ],
+  "paths": {
+    "/api/auth/register": {
+      "post": {
+        "summary": "Register a new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string" },
+                  "password": { "type": "string" },
+                  "name": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "User registered successfully" },
+          "400": { "description": "Invalid input" }
+        }
+      }
+    },
+    "/api/products": {
+      "get": {
+        "summary": "Get all products",
+        "responses": {
+          "200": { "description": "List of products" }
+        }
+      }
+    },
+    "/api/cart": {
+      "get": {
+        "summary": "Get user's cart",
+        "responses": {
+          "200": { "description": "Cart contents" }
+        }
+      },
+      "post": {
+        "summary": "Add item to cart",
+        "responses": {
+          "201": { "description": "Item added to cart" }
+        }
+      }
+    }
+  }
+}
